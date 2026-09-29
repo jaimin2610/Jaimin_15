@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Car Information & Price Prediction</title>
+    <title>Car Search</title>
 
     <style>
         * {
@@ -17,434 +16,204 @@
         body {
             min-height: 100vh;
             background: linear-gradient(135deg, #141e30, #243b55);
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #0066ff, #00c6ff);
-            color: white;
-            text-align: center;
-            padding: 35px 20px;
-        }
-
-        .header .icon {
-            font-size: 55px;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            margin: 10px 0;
-        }
-
-        .header p {
-            font-size: 16px;
-        }
-
-        /* Search section */
-        .search-section {
-            padding: 35px;
-            text-align: center;
-        }
-
-        .search-section h2 {
-            color: #222;
-            margin-bottom: 20px;
-        }
-
-        .search-box {
             display: flex;
-            max-width: 650px;
-            margin: auto;
-            gap: 10px;
+            justify-content: center;
+            align-items: center;
         }
 
-        .search-box input {
-            flex: 1;
-            padding: 15px;
+        .search-container {
+            width: 550px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        /* Search box */
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 18px;
             border: 2px solid #ddd;
             border-radius: 10px;
             font-size: 16px;
             outline: none;
         }
 
-        .search-box input:focus {
+        .search-input:focus {
             border-color: #0066ff;
         }
 
-        .search-box button {
-            padding: 15px 25px;
+        .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 15px;
+            font-size: 20px;
+        }
+
+        /* Suggestions */
+        .suggestions {
+            position: absolute;
+            width: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .suggestion-item {
+            padding: 13px 18px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .suggestion-item:hover,
+        .suggestion-item.active {
+            background: #eef5ff;
+            color: #0066ff;
+        }
+
+        .car-icon {
+            font-size: 20px;
+        }
+
+        .car-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-name {
+            font-weight: bold;
+            color: #222;
+        }
+
+        .car-brand {
+            font-size: 13px;
+            color: #888;
+            margin-top: 3px;
+        }
+
+        /* Search button */
+        .search-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
             border: none;
             border-radius: 10px;
-            background: #0066ff;
+            background: linear-gradient(135deg, #0066ff, #00aaff);
             color: white;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .search-box button:hover {
-            background: #004dcc;
-        }
-
-        /* Suggestions */
-        .suggestions {
-            margin-top: 15px;
-            color: #777;
-            font-size: 14px;
+        .search-button:hover {
+            opacity: 0.9;
         }
 
         /* Result */
         .result {
-            display: none;
-            padding: 0 35px 35px;
-        }
-
-        .car-title {
+            margin-top: 25px;
+            padding: 20px;
             background: #f2f7ff;
-            border-left: 6px solid #0066ff;
-            padding: 20px;
             border-radius: 10px;
-            margin-bottom: 25px;
-        }
-
-        .car-title h2 {
-            color: #0066ff;
-            font-size: 28px;
-        }
-
-        .car-title p {
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* Details grid */
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .detail-card {
-            background: #f8f9fa;
-            border: 1px solid #e1e1e1;
-            border-radius: 12px;
-            padding: 20px;
-            transition: 0.3s;
-        }
-
-        .detail-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .detail-card .label {
-            color: #777;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .detail-card .value {
-            color: #222;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .price-card {
-            background: linear-gradient(135deg, #e8fff1, #f4fff8);
-            border: 2px solid #22a05a;
-        }
-
-        .price-card .value {
-            color: #168a45;
-            font-size: 24px;
-        }
-
-        /* Not found */
-        .not-found {
             display: none;
-            text-align: center;
-            padding: 30px;
-            color: #d33;
         }
 
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 18px;
-            background: #f5f5f5;
+        .result h2 {
+            color: #0066ff;
+            margin-bottom: 10px;
+        }
+
+        .result p {
+            color: #444;
+            margin: 5px 0;
+        }
+
+        /* No result */
+        .no-result {
+            padding: 15px;
             color: #777;
-            font-size: 13px;
+            text-align: center;
         }
-
-        /* Responsive */
-        @media (max-width: 750px) {
-
-            .details-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .search-box {
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 500px) {
-
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .header h1 {
-                font-size: 25px;
-            }
-
-            .search-section,
-            .result {
-                padding-left: 20px;
-                padding-right: 20px;
-            }
-        }
-
     </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="search-container">
 
-    <!-- HEADER -->
-    <div class="header">
+    <h1>🚗 Car Search</h1>
 
-        <div class="icon">🚗</div>
+    <p class="subtitle">
+        Search for your car by name
+    </p>
 
-        <h1>Car Information System</h1>
+    <!-- Search -->
+    <div class="search-box">
 
-        <p>
-            Enter a car name to view its details and estimated price
-        </p>
+        <input
+            type="text"
+            id="carSearch"
+            class="search-input"
+            placeholder="Type car name..."
+            autocomplete="off"
+        >
 
-    </div>
+        <span class="search-icon">🔍</span>
 
-
-    <!-- SEARCH -->
-    <div class="search-section">
-
-        <h2>🔍 Search Car</h2>
-
-        <div class="search-box">
-
-            <input
-                type="text"
-                id="carInput"
-                placeholder="Enter car name e.g. Honda City"
-            >
-
-            <button onclick="searchCar()">
-                Search
-            </button>
-
-        </div>
-
-        <div class="suggestions">
-            Try: Honda City, Toyota Fortuner, Hyundai Creta,
-            Tata Nexon, Maruti Swift
-        </div>
+        <!-- Suggestions -->
+        <div id="suggestions" class="suggestions"></div>
 
     </div>
 
+    <button class="search-button" onclick="searchCar()">
+        Search Car
+    </button>
 
-    <!-- RESULT -->
+
+    <!-- Result -->
     <div class="result" id="result">
 
-        <div class="car-title">
-
-            <h2 id="carName">Honda City</h2>
-
-            <p id="carSubtitle">
-                Car information and specifications
-            </p>
-
-        </div>
-
-
-        <div class="details-grid">
-
-            <!-- Brand -->
-            <div class="detail-card">
-
-                <div class="label">🏷️ Brand</div>
-
-                <div class="value" id="brand">
-                    Honda
-                </div>
-
-            </div>
-
-
-            <!-- Price -->
-            <div class="detail-card price-card">
-
-                <div class="label">💰 Price</div>
-
-                <div class="value" id="price">
-                    ₹12.50 Lakh
-                </div>
-
-            </div>
-
-
-            <!-- Year -->
-            <div class="detail-card">
-
-                <div class="label">📅 Model Year</div>
-
-                <div class="value" id="year">
-                    2024
-                </div>
-
-            </div>
-
-
-            <!-- Fuel -->
-            <div class="detail-card">
-
-                <div class="label">⛽ Fuel Type</div>
-
-                <div class="value" id="fuel">
-                    Petrol
-                </div>
-
-            </div>
-
-
-            <!-- Transmission -->
-            <div class="detail-card">
-
-                <div class="label">⚙️ Transmission</div>
-
-                <div class="value" id="transmission">
-                    Manual
-                </div>
-
-            </div>
-
-
-            <!-- KM -->
-            <div class="detail-card">
-
-                <div class="label">🛣️ Kilometers Driven</div>
-
-                <div class="value" id="kms">
-                    25,000 km
-                </div>
-
-            </div>
-
-
-            <!-- Engine -->
-            <div class="detail-card">
-
-                <div class="label">🔧 Engine</div>
-
-                <div class="value" id="engine">
-                    1498 cc
-                </div>
-
-            </div>
-
-
-            <!-- Mileage -->
-            <div class="detail-card">
-
-                <div class="label">📊 Mileage</div>
-
-                <div class="value" id="mileage">
-                    17.8 km/l
-                </div>
-
-            </div>
-
-
-            <!-- Owners -->
-            <div class="detail-card">
-
-                <div class="label">👤 Previous Owners</div>
-
-                <div class="value" id="owners">
-                    1
-                </div>
-
-            </div>
-
-
-            <!-- Body Type -->
-            <div class="detail-card">
-
-                <div class="label">🚘 Body Type</div>
-
-                <div class="value" id="body">
-                    Sedan
-                </div>
-
-            </div>
-
-
-            <!-- Seats -->
-            <div class="detail-card">
-
-                <div class="label">💺 Seating Capacity</div>
-
-                <div class="value" id="seats">
-                    5 Seats
-                </div>
-
-            </div>
-
-
-            <!-- Color -->
-            <div class="detail-card">
-
-                <div class="label">🎨 Color</div>
-
-                <div class="value" id="color">
-                    White
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- NOT FOUND -->
-    <div class="not-found" id="notFound">
-
-        <h2>❌ Car Not Found</h2>
+        <h2 id="resultName"></h2>
 
         <p>
-            Please try another car name.
+            <strong>Brand:</strong>
+            <span id="resultBrand"></span>
         </p>
 
-    </div>
+        <p>
+            <strong>Price:</strong>
+            <span id="resultPrice"></span>
+        </p>
 
-
-    <!-- FOOTER -->
-    <div class="footer">
-
-        Car Information & Price Prediction System
-        <br>
-        Machine Learning Project
+        <p>
+            <strong>Year:</strong>
+            <span id="resultYear"></span>
+        </p>
 
     </div>
 
@@ -454,125 +223,394 @@
 <script>
 
     /*
-       SAMPLE CAR DATABASE
-
-       You can add more cars here.
+    ========================================
+        CAR DATABASE
+    ========================================
     */
 
-    const cars = {
+    const cars = [
 
-        "honda city": {
-
+        {
             name: "Honda City",
             brand: "Honda",
             price: "₹12.50 Lakh",
-            year: "2024",
-            fuel: "Petrol",
-            transmission: "Manual",
-            kms: "25,000 km",
-            engine: "1498 cc",
-            mileage: "17.8 km/l",
-            owners: "1",
-            body: "Sedan",
-            seats: "5 Seats",
-            color: "White"
-
+            year: 2024
         },
 
+        {
+            name: "Honda Amaze",
+            brand: "Honda",
+            price: "₹9.50 Lakh",
+            year: 2024
+        },
 
-        "toyota fortuner": {
+        {
+            name: "Honda Elevate",
+            brand: "Honda",
+            price: "₹15.00 Lakh",
+            year: 2024
+        },
 
+        {
             name: "Toyota Fortuner",
             brand: "Toyota",
             price: "₹35.50 Lakh",
-            year: "2023",
-            fuel: "Diesel",
-            transmission: "Automatic",
-            kms: "32,000 km",
-            engine: "2755 cc",
-            mileage: "14.4 km/l",
-            owners: "1",
-            body: "SUV",
-            seats: "7 Seats",
-            color: "Black"
-
+            year: 2023
         },
 
+        {
+            name: "Toyota Innova Crysta",
+            brand: "Toyota",
+            price: "₹25.00 Lakh",
+            year: 2024
+        },
 
-        "hyundai creta": {
+        {
+            name: "Toyota Urban Cruiser",
+            brand: "Toyota",
+            price: "₹12.00 Lakh",
+            year: 2024
+        },
 
+        {
             name: "Hyundai Creta",
             brand: "Hyundai",
             price: "₹15.20 Lakh",
-            year: "2024",
-            fuel: "Petrol",
-            transmission: "Automatic",
-            kms: "18,000 km",
-            engine: "1497 cc",
-            mileage: "17.4 km/l",
-            owners: "1",
-            body: "SUV",
-            seats: "5 Seats",
-            color: "Blue"
-
+            year: 2024
         },
 
+        {
+            name: "Hyundai Venue",
+            brand: "Hyundai",
+            price: "₹11.00 Lakh",
+            year: 2024
+        },
 
-        "tata nexon": {
+        {
+            name: "Hyundai Verna",
+            brand: "Hyundai",
+            price: "₹14.00 Lakh",
+            year: 2024
+        },
 
+        {
             name: "Tata Nexon",
             brand: "Tata",
             price: "₹10.80 Lakh",
-            year: "2024",
-            fuel: "Petrol",
-            transmission: "Manual",
-            kms: "20,000 km",
-            engine: "1199 cc",
-            mileage: "17.4 km/l",
-            owners: "1",
-            body: "SUV",
-            seats: "5 Seats",
-            color: "Red"
-
+            year: 2024
         },
 
+        {
+            name: "Tata Punch",
+            brand: "Tata",
+            price: "₹9.00 Lakh",
+            year: 2024
+        },
 
-        "maruti swift": {
+        {
+            name: "Tata Harrier",
+            brand: "Tata",
+            price: "₹20.00 Lakh",
+            year: 2024
+        },
 
+        {
             name: "Maruti Swift",
             brand: "Maruti Suzuki",
             price: "₹8.50 Lakh",
-            year: "2024",
-            fuel: "Petrol",
-            transmission: "Manual",
-            kms: "15,000 km",
-            engine: "1197 cc",
-            mileage: "22.4 km/l",
-            owners: "1",
-            body: "Hatchback",
-            seats: "5 Seats",
-            color: "Silver"
+            year: 2024
+        },
+
+        {
+            name: "Maruti Baleno",
+            brand: "Maruti Suzuki",
+            price: "₹9.00 Lakh",
+            year: 2024
+        },
+
+        {
+            name: "Maruti Brezza",
+            brand: "Maruti Suzuki",
+            price: "₹12.50 Lakh",
+            year: 2024
+        },
+
+        {
+            name: "Mahindra Thar",
+            brand: "Mahindra",
+            price: "₹15.50 Lakh",
+            year: 2024
+        },
+
+        {
+            name: "Mahindra Scorpio",
+            brand: "Mahindra",
+            price: "₹18.50 Lakh",
+            year: 2024
+        },
+
+        {
+            name: "Mahindra XUV700",
+            brand: "Mahindra",
+            price: "₹22.00 Lakh",
+            year: 2024
+        },
+
+        {
+            name: "Kia Seltos",
+            brand: "Kia",
+            price: "₹16.00 Lakh",
+            year: 2024
+        },
+
+        {
+            name: "Kia Sonet",
+            brand: "Kia",
+            price: "₹11.50 Lakh",
+            year: 2024
+        }
+
+    ];
+
+
+    /*
+    ========================================
+        VARIABLES
+    ========================================
+    */
+
+    const searchInput = document.getElementById("carSearch");
+    const suggestionsBox = document.getElementById("suggestions");
+
+    let selectedIndex = -1;
+
+
+    /*
+    ========================================
+        SHOW SUGGESTIONS
+    ========================================
+    */
+
+    searchInput.addEventListener("input", function () {
+
+        const query = this.value
+            .toLowerCase()
+            .trim();
+
+        suggestionsBox.innerHTML = "";
+
+        selectedIndex = -1;
+
+
+        // If search box is empty
+        if (query === "") {
+
+            suggestionsBox.style.display = "none";
+
+            return;
+        }
+
+
+        /*
+        Find cars whose name or brand
+        matches the typed text
+        */
+
+        const filteredCars = cars.filter(car =>
+
+            car.name.toLowerCase().includes(query) ||
+
+            car.brand.toLowerCase().includes(query)
+
+        );
+
+
+        // No cars found
+        if (filteredCars.length === 0) {
+
+            suggestionsBox.innerHTML =
+                `<div class="no-result">
+                    No cars found
+                </div>`;
+
+            suggestionsBox.style.display = "block";
+
+            return;
+        }
+
+
+        /*
+        Create suggestions
+        */
+
+        filteredCars.forEach((car, index) => {
+
+            const item = document.createElement("div");
+
+            item.classList.add("suggestion-item");
+
+            item.innerHTML = `
+
+                <span class="car-icon">🚗</span>
+
+                <div class="car-info">
+
+                    <span class="car-name">
+                        ${car.name}
+                    </span>
+
+                    <span class="car-brand">
+                        ${car.brand}
+                    </span>
+
+                </div>
+
+            `;
+
+
+            /*
+            Click suggestion
+            */
+
+            item.addEventListener("click", function () {
+
+                searchInput.value = car.name;
+
+                suggestionsBox.style.display = "none";
+
+                displayCar(car);
+
+            });
+
+
+            suggestionsBox.appendChild(item);
+
+        });
+
+
+        suggestionsBox.style.display = "block";
+
+    });
+
+
+    /*
+    ========================================
+        KEYBOARD NAVIGATION
+    ========================================
+    */
+
+    searchInput.addEventListener("keydown", function (event) {
+
+        const items =
+            suggestionsBox.querySelectorAll(
+                ".suggestion-item"
+            );
+
+
+        if (event.key === "ArrowDown") {
+
+            event.preventDefault();
+
+            if (items.length === 0) return;
+
+            selectedIndex++;
+
+            if (selectedIndex >= items.length) {
+                selectedIndex = 0;
+            }
+
+            updateActiveSuggestion(items);
 
         }
 
-    };
 
+        else if (event.key === "ArrowUp") {
+
+            event.preventDefault();
+
+            if (items.length === 0) return;
+
+            selectedIndex--;
+
+            if (selectedIndex < 0) {
+                selectedIndex = items.length - 1;
+            }
+
+            updateActiveSuggestion(items);
+
+        }
+
+
+        else if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            if (
+                selectedIndex >= 0 &&
+                items[selectedIndex]
+            ) {
+
+                items[selectedIndex].click();
+
+            }
+
+            else {
+
+                searchCar();
+
+            }
+
+        }
+
+
+        else if (event.key === "Escape") {
+
+            suggestionsBox.style.display = "none";
+
+        }
+
+    });
+
+
+    /*
+    ========================================
+        HIGHLIGHT ACTIVE SUGGESTION
+    ========================================
+    */
+
+    function updateActiveSuggestion(items) {
+
+        items.forEach(item => {
+
+            item.classList.remove("active");
+
+        });
+
+
+        if (items[selectedIndex]) {
+
+            items[selectedIndex]
+                .classList.add("active");
+
+        }
+
+    }
+
+
+    /*
+    ========================================
+        SEARCH CAR
+    ========================================
+    */
 
     function searchCar() {
 
-        let input = document
-            .getElementById("carInput")
-            .value
+        const query = searchInput.value
             .toLowerCase()
             .trim();
 
 
-        let result = document.getElementById("result");
-
-        let notFound = document.getElementById("notFound");
-
-
-        if (input === "") {
+        if (query === "") {
 
             alert("Please enter a car name.");
 
@@ -581,82 +619,102 @@
         }
 
 
-        let car = cars[input];
+        const car = cars.find(car =>
+
+            car.name.toLowerCase() === query
+
+        );
 
 
         if (car) {
 
-            // Show result
-            result.style.display = "block";
+            displayCar(car);
 
-            notFound.style.display = "none";
+        }
 
+        else {
 
-            // Display information
-            document.getElementById("carName").innerText =
-                car.name;
+            /*
+            Also allow partial search
+            */
 
-            document.getElementById("brand").innerText =
-                car.brand;
+            const partialCar = cars.find(car =>
 
-            document.getElementById("price").innerText =
-                car.price;
+                car.name
+                    .toLowerCase()
+                    .includes(query)
 
-            document.getElementById("year").innerText =
-                car.year;
-
-            document.getElementById("fuel").innerText =
-                car.fuel;
-
-            document.getElementById("transmission").innerText =
-                car.transmission;
-
-            document.getElementById("kms").innerText =
-                car.kms;
-
-            document.getElementById("engine").innerText =
-                car.engine;
-
-            document.getElementById("mileage").innerText =
-                car.mileage;
-
-            document.getElementById("owners").innerText =
-                car.owners;
-
-            document.getElementById("body").innerText =
-                car.body;
-
-            document.getElementById("seats").innerText =
-                car.seats;
-
-            document.getElementById("color").innerText =
-                car.color;
+            );
 
 
-        } else {
+            if (partialCar) {
 
-            result.style.display = "none";
+                searchInput.value =
+                    partialCar.name;
 
-            notFound.style.display = "block";
+                displayCar(partialCar);
+
+            }
+
+            else {
+
+                alert(
+                    "Car not found. Please select a car from the suggestions."
+                );
+
+            }
 
         }
 
     }
 
 
-    // Press Enter to search
+    /*
+    ========================================
+        DISPLAY CAR
+    ========================================
+    */
 
-    document
-        .getElementById("carInput")
-        .addEventListener("keypress", function(event) {
+    function displayCar(car) {
 
-            if (event.key === "Enter") {
+        document.getElementById("resultName")
+            .innerText = car.name;
 
-                searchCar();
+        document.getElementById("resultBrand")
+            .innerText = car.brand;
 
-            }
+        document.getElementById("resultPrice")
+            .innerText = car.price;
 
-        });
+        document.getElementById("resultYear")
+            .innerText = car.year;
+
+
+        document.getElementById("result")
+            .style.display = "block";
+
+
+        suggestionsBox.style.display = "none";
+
+    }
+
+
+    /*
+    ========================================
+        CLOSE SUGGESTIONS
+        WHEN CLICKING OUTSIDE
+    ========================================
+    */
+
+    document.addEventListener("click", function (event) {
+
+        if (!event.target.closest(".search-box")) {
+
+            suggestionsBox.style.display = "none";
+
+        }
+
+    });
 
 </script>
 
