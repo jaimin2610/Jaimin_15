@@ -1,1 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Spam Email Detection</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header .icon {
+            font-size: 55px;
+        }
+
+        .header h1 {
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .header p {
+            color: #777;
+            font-size: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            resize: vertical;
+            font-size: 15px;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 18px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #667eea;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d9;
+        }
+
+        .result {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .spam {
+            display: block;
+            background: #ffe5e5;
+            color: #d60000;
+            border: 1px solid #ffaaaa;
+        }
+
+        .safe {
+            display: block;
+            background: #e5ffe9;
+            color: #087f23;
+            border: 1px solid #9de5a9;
+        }
+
+        .info {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #999;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <div class="icon">📧</div>
+
+            <h1>Spam Email Detection</h1>
+
+            <p>
+                Enter an email or message to check whether it is
+                Spam or Not Spam.
+            </p>
+        </div>
+
+        <label for="email">Enter Email / Message</label>
+
+        <textarea
+            id="email"
+            placeholder="Example: Congratulations! You have won a free prize..."
+        ></textarea>
+
+        <button onclick="checkSpam()">
+            🔍 Check Message
+        </button>
+
+        <div id="result" class="result"></div>
+
+        <div class="info">
+            <strong>How it works:</strong><br>
+            The system analyzes the entered message and checks for
+            suspicious words and patterns commonly associated with
+            spam messages.
+        </div>
+
+        <div class="footer">
+            AI Spam Email Detection Project
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function checkSpam() {
+
+            const message = document
+                .getElementById("email")
+                .value
+                .toLowerCase();
+
+            const result = document.getElementById("result");
+
+            if (message.trim() === "") {
+
+                result.className = "result spam";
+
+                result.innerHTML =
+                    "⚠️ Please enter an email or message.";
+
+                return;
+            }
+
+            /*
+             * Demo spam detection.
+             * This is NOT the trained ML model.
+             */
+
+            const spamWords = [
+                "free",
+                "winner",
+                "won",
+                "prize",
+                "lottery",
+                "claim",
+                "reward",
+                "cash",
+                "urgent",
+                "click here",
+                "congratulations",
+                "limited offer",
+                "gift",
+                "money"
+            ];
+
+            let spamCount = 0;
+
+            spamWords.forEach(function(word) {
+
+                if (message.includes(word)) {
+                    spamCount++;
+                }
+
+            });
+
+
+            if (spamCount >= 2) {
+
+                result.className = "result spam";
+
+                result.innerHTML =
+                    "🚨 SPAM DETECTED<br>" +
+                    "<small>This message appears suspicious.</small>";
+
+            } else {
+
+                result.className = "result safe";
+
+                result.innerHTML =
+                    "✅ NOT SPAM<br>" +
+                    "<small>This message appears to be legitimate.</small>";
+
+            }
+        }
+
+    </script>
+
+</body>
+</html>
