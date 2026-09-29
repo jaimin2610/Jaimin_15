@@ -4,132 +4,217 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Student Marks Prediction</title>
+    <title>Car Information & Price Prediction</title>
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: Arial, sans-serif;
         }
 
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            padding: 40px 20px;
         }
 
         .container {
-            width: 100%;
-            max-width: 650px;
+            max-width: 1000px;
+            margin: auto;
             background: white;
-            padding: 35px;
             border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
         }
 
+        /* Header */
         .header {
+            background: linear-gradient(135deg, #0066ff, #00c6ff);
+            color: white;
             text-align: center;
-            margin-bottom: 30px;
+            padding: 35px 20px;
         }
 
-        .icon {
+        .header .icon {
             font-size: 55px;
         }
 
-        h1 {
-            color: #333;
+        .header h1 {
+            font-size: 32px;
             margin: 10px 0;
         }
 
         .header p {
-            color: #777;
+            font-size: 16px;
         }
 
-        .form-group {
+        /* Search section */
+        .search-section {
+            padding: 35px;
+            text-align: center;
+        }
+
+        .search-section h2 {
+            color: #222;
             margin-bottom: 20px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
+        .search-box {
+            display: flex;
+            max-width: 650px;
+            margin: auto;
+            gap: 10px;
         }
 
-        input,
-        select {
-            width: 100%;
-            padding: 13px;
+        .search-box input {
+            flex: 1;
+            padding: 15px;
             border: 2px solid #ddd;
             border-radius: 10px;
-            font-size: 15px;
+            font-size: 16px;
             outline: none;
         }
 
-        input:focus,
-        select:focus {
-            border-color: #667eea;
+        .search-box input:focus {
+            border-color: #0066ff;
         }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background: #667eea;
-            color: white;
+        .search-box button {
+            padding: 15px 25px;
             border: none;
             border-radius: 10px;
-            font-size: 17px;
+            background: #0066ff;
+            color: white;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #5568d9;
+        .search-box button:hover {
+            background: #004dcc;
         }
 
+        /* Suggestions */
+        .suggestions {
+            margin-top: 15px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Result */
         .result {
             display: none;
-            margin-top: 25px;
+            padding: 0 35px 35px;
+        }
+
+        .car-title {
+            background: #f2f7ff;
+            border-left: 6px solid #0066ff;
             padding: 20px;
-            text-align: center;
-            background: #f0f4ff;
-            border-radius: 12px;
-            color: #333;
-        }
-
-        .marks {
-            font-size: 32px;
-            font-weight: bold;
-            color: #667eea;
-            margin: 10px;
-        }
-
-        .message {
-            font-size: 16px;
-            color: #555;
-        }
-
-        .info {
-            margin-top: 25px;
-            padding: 15px;
-            background: #f5f5f5;
             border-radius: 10px;
-            color: #555;
-            font-size: 14px;
-            line-height: 1.6;
+            margin-bottom: 25px;
         }
 
+        .car-title h2 {
+            color: #0066ff;
+            font-size: 28px;
+        }
+
+        .car-title p {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Details grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            border: 1px solid #e1e1e1;
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .detail-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .detail-card .label {
+            color: #777;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .detail-card .value {
+            color: #222;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .price-card {
+            background: linear-gradient(135deg, #e8fff1, #f4fff8);
+            border: 2px solid #22a05a;
+        }
+
+        .price-card .value {
+            color: #168a45;
+            font-size: 24px;
+        }
+
+        /* Not found */
+        .not-found {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            color: #d33;
+        }
+
+        /* Footer */
         .footer {
             text-align: center;
-            margin-top: 20px;
-            color: #999;
+            padding: 18px;
+            background: #f5f5f5;
+            color: #777;
             font-size: 13px;
         }
+
+        /* Responsive */
+        @media (max-width: 750px) {
+
+            .details-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .search-section,
+            .result {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
     </style>
 </head>
 
@@ -137,77 +222,230 @@
 
 <div class="container">
 
+    <!-- HEADER -->
     <div class="header">
-        <div class="icon">🎓</div>
 
-        <h1>Student Marks Prediction</h1>
+        <div class="icon">🚗</div>
+
+        <h1>Car Information System</h1>
 
         <p>
-            Predict student marks using study-related information.
+            Enter a car name to view its details and estimated price
         </p>
-    </div>
-
-    <div class="form-group">
-        <label for="studyHours">Study Hours per Day</label>
-
-        <input
-            type="number"
-            id="studyHours"
-            min="0"
-            max="24"
-            step="0.5"
-            placeholder="Example: 5"
-        >
-    </div>
-
-    <div class="form-group">
-        <label for="attendance">Attendance (%)</label>
-
-        <input
-            type="number"
-            id="attendance"
-            min="0"
-            max="100"
-            placeholder="Example: 85"
-        >
-    </div>
-
-    <div class="form-group">
-        <label for="previousMarks">Previous Exam Marks</label>
-
-        <input
-            type="number"
-            id="previousMarks"
-            min="0"
-            max="100"
-            placeholder="Example: 70"
-        >
-    </div>
-
-    <button onclick="predictMarks()">
-        📊 Predict Marks
-    </button>
-
-    <div id="result" class="result">
-
-        <h2>Predicted Marks</h2>
-
-        <div id="marks" class="marks"></div>
-
-        <div id="message" class="message"></div>
 
     </div>
 
-    <div class="info">
-        <strong>About the project:</strong><br>
 
-        This application demonstrates how machine learning
-        can be used to predict student marks from study hours,
-        attendance, and previous exam performance.
+    <!-- SEARCH -->
+    <div class="search-section">
+
+        <h2>🔍 Search Car</h2>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="carInput"
+                placeholder="Enter car name e.g. Honda City"
+            >
+
+            <button onclick="searchCar()">
+                Search
+            </button>
+
+        </div>
+
+        <div class="suggestions">
+            Try: Honda City, Toyota Fortuner, Hyundai Creta,
+            Tata Nexon, Maruti Swift
+        </div>
+
     </div>
 
+
+    <!-- RESULT -->
+    <div class="result" id="result">
+
+        <div class="car-title">
+
+            <h2 id="carName">Honda City</h2>
+
+            <p id="carSubtitle">
+                Car information and specifications
+            </p>
+
+        </div>
+
+
+        <div class="details-grid">
+
+            <!-- Brand -->
+            <div class="detail-card">
+
+                <div class="label">🏷️ Brand</div>
+
+                <div class="value" id="brand">
+                    Honda
+                </div>
+
+            </div>
+
+
+            <!-- Price -->
+            <div class="detail-card price-card">
+
+                <div class="label">💰 Price</div>
+
+                <div class="value" id="price">
+                    ₹12.50 Lakh
+                </div>
+
+            </div>
+
+
+            <!-- Year -->
+            <div class="detail-card">
+
+                <div class="label">📅 Model Year</div>
+
+                <div class="value" id="year">
+                    2024
+                </div>
+
+            </div>
+
+
+            <!-- Fuel -->
+            <div class="detail-card">
+
+                <div class="label">⛽ Fuel Type</div>
+
+                <div class="value" id="fuel">
+                    Petrol
+                </div>
+
+            </div>
+
+
+            <!-- Transmission -->
+            <div class="detail-card">
+
+                <div class="label">⚙️ Transmission</div>
+
+                <div class="value" id="transmission">
+                    Manual
+                </div>
+
+            </div>
+
+
+            <!-- KM -->
+            <div class="detail-card">
+
+                <div class="label">🛣️ Kilometers Driven</div>
+
+                <div class="value" id="kms">
+                    25,000 km
+                </div>
+
+            </div>
+
+
+            <!-- Engine -->
+            <div class="detail-card">
+
+                <div class="label">🔧 Engine</div>
+
+                <div class="value" id="engine">
+                    1498 cc
+                </div>
+
+            </div>
+
+
+            <!-- Mileage -->
+            <div class="detail-card">
+
+                <div class="label">📊 Mileage</div>
+
+                <div class="value" id="mileage">
+                    17.8 km/l
+                </div>
+
+            </div>
+
+
+            <!-- Owners -->
+            <div class="detail-card">
+
+                <div class="label">👤 Previous Owners</div>
+
+                <div class="value" id="owners">
+                    1
+                </div>
+
+            </div>
+
+
+            <!-- Body Type -->
+            <div class="detail-card">
+
+                <div class="label">🚘 Body Type</div>
+
+                <div class="value" id="body">
+                    Sedan
+                </div>
+
+            </div>
+
+
+            <!-- Seats -->
+            <div class="detail-card">
+
+                <div class="label">💺 Seating Capacity</div>
+
+                <div class="value" id="seats">
+                    5 Seats
+                </div>
+
+            </div>
+
+
+            <!-- Color -->
+            <div class="detail-card">
+
+                <div class="label">🎨 Color</div>
+
+                <div class="value" id="color">
+                    White
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NOT FOUND -->
+    <div class="not-found" id="notFound">
+
+        <h2>❌ Car Not Found</h2>
+
+        <p>
+            Please try another car name.
+        </p>
+
+    </div>
+
+
+    <!-- FOOTER -->
     <div class="footer">
-        Student Marks Prediction AI Project
+
+        Car Information & Price Prediction System
+        <br>
+        Machine Learning Project
+
     </div>
 
 </div>
@@ -215,90 +453,210 @@
 
 <script>
 
-function predictMarks() {
-
-    let studyHours =
-        parseFloat(document.getElementById("studyHours").value);
-
-    let attendance =
-        parseFloat(document.getElementById("attendance").value);
-
-    let previousMarks =
-        parseFloat(document.getElementById("previousMarks").value);
-
-
-    if (
-        isNaN(studyHours) ||
-        isNaN(attendance) ||
-        isNaN(previousMarks)
-    ) {
-
-        alert("Please enter all values.");
-
-        return;
-    }
-
-
-    if (
-        studyHours < 0 ||
-        studyHours > 24 ||
-        attendance < 0 ||
-        attendance > 100 ||
-        previousMarks < 0 ||
-        previousMarks > 100
-    ) {
-
-        alert("Please enter valid values.");
-
-        return;
-    }
-
-
     /*
-     * Demo prediction formula.
-     *
-     * This is only for the frontend demonstration.
-     * For the actual project, replace this with
-     * predictions from your trained ML model.
-     */
+       SAMPLE CAR DATABASE
 
-    let predictedMarks =
-        (studyHours * 5) +
-        (attendance * 0.20) +
-        (previousMarks * 0.30);
+       You can add more cars here.
+    */
+
+    const cars = {
+
+        "honda city": {
+
+            name: "Honda City",
+            brand: "Honda",
+            price: "₹12.50 Lakh",
+            year: "2024",
+            fuel: "Petrol",
+            transmission: "Manual",
+            kms: "25,000 km",
+            engine: "1498 cc",
+            mileage: "17.8 km/l",
+            owners: "1",
+            body: "Sedan",
+            seats: "5 Seats",
+            color: "White"
+
+        },
 
 
-    if (predictedMarks > 100) {
-        predictedMarks = 100;
+        "toyota fortuner": {
+
+            name: "Toyota Fortuner",
+            brand: "Toyota",
+            price: "₹35.50 Lakh",
+            year: "2023",
+            fuel: "Diesel",
+            transmission: "Automatic",
+            kms: "32,000 km",
+            engine: "2755 cc",
+            mileage: "14.4 km/l",
+            owners: "1",
+            body: "SUV",
+            seats: "7 Seats",
+            color: "Black"
+
+        },
+
+
+        "hyundai creta": {
+
+            name: "Hyundai Creta",
+            brand: "Hyundai",
+            price: "₹15.20 Lakh",
+            year: "2024",
+            fuel: "Petrol",
+            transmission: "Automatic",
+            kms: "18,000 km",
+            engine: "1497 cc",
+            mileage: "17.4 km/l",
+            owners: "1",
+            body: "SUV",
+            seats: "5 Seats",
+            color: "Blue"
+
+        },
+
+
+        "tata nexon": {
+
+            name: "Tata Nexon",
+            brand: "Tata",
+            price: "₹10.80 Lakh",
+            year: "2024",
+            fuel: "Petrol",
+            transmission: "Manual",
+            kms: "20,000 km",
+            engine: "1199 cc",
+            mileage: "17.4 km/l",
+            owners: "1",
+            body: "SUV",
+            seats: "5 Seats",
+            color: "Red"
+
+        },
+
+
+        "maruti swift": {
+
+            name: "Maruti Swift",
+            brand: "Maruti Suzuki",
+            price: "₹8.50 Lakh",
+            year: "2024",
+            fuel: "Petrol",
+            transmission: "Manual",
+            kms: "15,000 km",
+            engine: "1197 cc",
+            mileage: "22.4 km/l",
+            owners: "1",
+            body: "Hatchback",
+            seats: "5 Seats",
+            color: "Silver"
+
+        }
+
+    };
+
+
+    function searchCar() {
+
+        let input = document
+            .getElementById("carInput")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+        let result = document.getElementById("result");
+
+        let notFound = document.getElementById("notFound");
+
+
+        if (input === "") {
+
+            alert("Please enter a car name.");
+
+            return;
+
+        }
+
+
+        let car = cars[input];
+
+
+        if (car) {
+
+            // Show result
+            result.style.display = "block";
+
+            notFound.style.display = "none";
+
+
+            // Display information
+            document.getElementById("carName").innerText =
+                car.name;
+
+            document.getElementById("brand").innerText =
+                car.brand;
+
+            document.getElementById("price").innerText =
+                car.price;
+
+            document.getElementById("year").innerText =
+                car.year;
+
+            document.getElementById("fuel").innerText =
+                car.fuel;
+
+            document.getElementById("transmission").innerText =
+                car.transmission;
+
+            document.getElementById("kms").innerText =
+                car.kms;
+
+            document.getElementById("engine").innerText =
+                car.engine;
+
+            document.getElementById("mileage").innerText =
+                car.mileage;
+
+            document.getElementById("owners").innerText =
+                car.owners;
+
+            document.getElementById("body").innerText =
+                car.body;
+
+            document.getElementById("seats").innerText =
+                car.seats;
+
+            document.getElementById("color").innerText =
+                car.color;
+
+
+        } else {
+
+            result.style.display = "none";
+
+            notFound.style.display = "block";
+
+        }
+
     }
 
-    predictedMarks = predictedMarks.toFixed(2);
 
+    // Press Enter to search
 
-    document.getElementById("marks").innerHTML =
-        predictedMarks + " / 100";
+    document
+        .getElementById("carInput")
+        .addEventListener("keypress", function(event) {
 
+            if (event.key === "Enter") {
 
-    if (predictedMarks >= 75) {
+                searchCar();
 
-        document.getElementById("message").innerHTML =
-            "🌟 Good performance predicted!";
+            }
 
-    } else if (predictedMarks >= 50) {
-
-        document.getElementById("message").innerHTML =
-            "👍 Average performance predicted.";
-
-    } else {
-
-        document.getElementById("message").innerHTML =
-            "📚 More preparation may be helpful.";
-
-    }
-
-
-    document.getElementById("result").style.display = "block";
-}
+        });
 
 </script>
 
