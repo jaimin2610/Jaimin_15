@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Spam Email Detection</title>
+    <title>Student Marks Prediction</title>
 
     <style>
         * {
@@ -20,11 +20,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .container {
-            width: 90%;
-            max-width: 700px;
+            width: 100%;
+            max-width: 650px;
             background: white;
             padding: 35px;
             border-radius: 20px;
@@ -33,53 +34,55 @@
 
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
-        .header .icon {
+        .icon {
             font-size: 55px;
         }
 
-        .header h1 {
+        h1 {
             color: #333;
             margin: 10px 0;
         }
 
         .header p {
             color: #777;
-            font-size: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
+            margin-bottom: 8px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 10px;
         }
 
-        textarea {
+        input,
+        select {
             width: 100%;
-            height: 180px;
-            padding: 15px;
+            padding: 13px;
             border: 2px solid #ddd;
-            border-radius: 12px;
-            resize: vertical;
+            border-radius: 10px;
             font-size: 15px;
             outline: none;
         }
 
-        textarea:focus {
+        input:focus,
+        select:focus {
             border-color: #667eea;
         }
 
         button {
             width: 100%;
-            margin-top: 18px;
             padding: 14px;
-            border: none;
-            border-radius: 10px;
             background: #667eea;
             color: white;
+            border: none;
+            border-radius: 10px;
             font-size: 17px;
             font-weight: bold;
             cursor: pointer;
@@ -93,24 +96,22 @@
             display: none;
             margin-top: 25px;
             padding: 20px;
-            border-radius: 12px;
             text-align: center;
+            background: #f0f4ff;
+            border-radius: 12px;
+            color: #333;
+        }
+
+        .marks {
+            font-size: 32px;
             font-weight: bold;
-            font-size: 18px;
+            color: #667eea;
+            margin: 10px;
         }
 
-        .spam {
-            display: block;
-            background: #ffe5e5;
-            color: #d60000;
-            border: 1px solid #ffaaaa;
-        }
-
-        .safe {
-            display: block;
-            background: #e5ffe9;
-            color: #087f23;
-            border: 1px solid #9de5a9;
+        .message {
+            font-size: 16px;
+            color: #555;
         }
 
         .info {
@@ -134,120 +135,172 @@
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <div class="header">
-            <div class="icon">📧</div>
+    <div class="header">
+        <div class="icon">🎓</div>
 
-            <h1>Spam Email Detection</h1>
+        <h1>Student Marks Prediction</h1>
 
-            <p>
-                Enter an email or message to check whether it is
-                Spam or Not Spam.
-            </p>
-        </div>
+        <p>
+            Predict student marks using study-related information.
+        </p>
+    </div>
 
-        <label for="email">Enter Email / Message</label>
+    <div class="form-group">
+        <label for="studyHours">Study Hours per Day</label>
 
-        <textarea
-            id="email"
-            placeholder="Example: Congratulations! You have won a free prize..."
-        ></textarea>
+        <input
+            type="number"
+            id="studyHours"
+            min="0"
+            max="24"
+            step="0.5"
+            placeholder="Example: 5"
+        >
+    </div>
 
-        <button onclick="checkSpam()">
-            🔍 Check Message
-        </button>
+    <div class="form-group">
+        <label for="attendance">Attendance (%)</label>
 
-        <div id="result" class="result"></div>
+        <input
+            type="number"
+            id="attendance"
+            min="0"
+            max="100"
+            placeholder="Example: 85"
+        >
+    </div>
 
-        <div class="info">
-            <strong>How it works:</strong><br>
-            The system analyzes the entered message and checks for
-            suspicious words and patterns commonly associated with
-            spam messages.
-        </div>
+    <div class="form-group">
+        <label for="previousMarks">Previous Exam Marks</label>
 
-        <div class="footer">
-            AI Spam Email Detection Project
-        </div>
+        <input
+            type="number"
+            id="previousMarks"
+            min="0"
+            max="100"
+            placeholder="Example: 70"
+        >
+    </div>
+
+    <button onclick="predictMarks()">
+        📊 Predict Marks
+    </button>
+
+    <div id="result" class="result">
+
+        <h2>Predicted Marks</h2>
+
+        <div id="marks" class="marks"></div>
+
+        <div id="message" class="message"></div>
 
     </div>
 
+    <div class="info">
+        <strong>About the project:</strong><br>
 
-    <script>
+        This application demonstrates how machine learning
+        can be used to predict student marks from study hours,
+        attendance, and previous exam performance.
+    </div>
 
-        function checkSpam() {
+    <div class="footer">
+        Student Marks Prediction AI Project
+    </div>
 
-            const message = document
-                .getElementById("email")
-                .value
-                .toLowerCase();
-
-            const result = document.getElementById("result");
-
-            if (message.trim() === "") {
-
-                result.className = "result spam";
-
-                result.innerHTML =
-                    "⚠️ Please enter an email or message.";
-
-                return;
-            }
-
-            /*
-             * Demo spam detection.
-             * This is NOT the trained ML model.
-             */
-
-            const spamWords = [
-                "free",
-                "winner",
-                "won",
-                "prize",
-                "lottery",
-                "claim",
-                "reward",
-                "cash",
-                "urgent",
-                "click here",
-                "congratulations",
-                "limited offer",
-                "gift",
-                "money"
-            ];
-
-            let spamCount = 0;
-
-            spamWords.forEach(function(word) {
-
-                if (message.includes(word)) {
-                    spamCount++;
-                }
-
-            });
+</div>
 
 
-            if (spamCount >= 2) {
+<script>
 
-                result.className = "result spam";
+function predictMarks() {
 
-                result.innerHTML =
-                    "🚨 SPAM DETECTED<br>" +
-                    "<small>This message appears suspicious.</small>";
+    let studyHours =
+        parseFloat(document.getElementById("studyHours").value);
 
-            } else {
+    let attendance =
+        parseFloat(document.getElementById("attendance").value);
 
-                result.className = "result safe";
+    let previousMarks =
+        parseFloat(document.getElementById("previousMarks").value);
 
-                result.innerHTML =
-                    "✅ NOT SPAM<br>" +
-                    "<small>This message appears to be legitimate.</small>";
 
-            }
-        }
+    if (
+        isNaN(studyHours) ||
+        isNaN(attendance) ||
+        isNaN(previousMarks)
+    ) {
 
-    </script>
+        alert("Please enter all values.");
+
+        return;
+    }
+
+
+    if (
+        studyHours < 0 ||
+        studyHours > 24 ||
+        attendance < 0 ||
+        attendance > 100 ||
+        previousMarks < 0 ||
+        previousMarks > 100
+    ) {
+
+        alert("Please enter valid values.");
+
+        return;
+    }
+
+
+    /*
+     * Demo prediction formula.
+     *
+     * This is only for the frontend demonstration.
+     * For the actual project, replace this with
+     * predictions from your trained ML model.
+     */
+
+    let predictedMarks =
+        (studyHours * 5) +
+        (attendance * 0.20) +
+        (previousMarks * 0.30);
+
+
+    if (predictedMarks > 100) {
+        predictedMarks = 100;
+    }
+
+    predictedMarks = predictedMarks.toFixed(2);
+
+
+    document.getElementById("marks").innerHTML =
+        predictedMarks + " / 100";
+
+
+    if (predictedMarks >= 75) {
+
+        document.getElementById("message").innerHTML =
+            "🌟 Good performance predicted!";
+
+    } else if (predictedMarks >= 50) {
+
+        document.getElementById("message").innerHTML =
+            "👍 Average performance predicted.";
+
+    } else {
+
+        document.getElementById("message").innerHTML =
+            "📚 More preparation may be helpful.";
+
+    }
+
+
+    document.getElementById("result").style.display = "block";
+}
+
+</script>
 
 </body>
 </html>
